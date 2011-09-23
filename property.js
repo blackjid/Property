@@ -176,11 +176,18 @@ property.prototype.toggle = function() {
     this.set(!this.value);
 }
 
-property.prototype.toggleVisibility = function(selector, value) {
+/**
+ * Toogle the visibility of an element
+ * @param selector  The selector (string) of the dom object
+ * @param propValue The value of the property / comparer (function)
+ */
+property.prototype.toggleVisibility = function(selector, propValue) {
     return this.__onChange__(function(newValue, oldValue) {
-        if(oldValue === value)
+        var comparer = (_.isFunction(propValue)) ? propValue : function(value) {return propValue == value;};
+        
+        if(comparer(oldValue))
             $(selector).hide();
-        if(newValue === value)
+        if(comparer(newValue))
             $(selector).show();
     });
 }
